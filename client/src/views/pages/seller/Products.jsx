@@ -16,7 +16,9 @@ const Products = () => {
         handleImageUpload,
         removeImage,
         handleSave,
-        deleteProduct
+        deleteProduct,
+        editProduct,
+        duplicateProduct,
     } = useProductController();
 
     return (
@@ -53,6 +55,8 @@ const Products = () => {
                 products={products}
                 isInitialLoading={isInitialLoading}
                 onDelete={deleteProduct}
+                onEdit={editProduct}
+                onDuplicate={duplicateProduct}
             />
         </div>
     );

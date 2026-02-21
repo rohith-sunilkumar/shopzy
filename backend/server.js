@@ -5,6 +5,11 @@ import authRoutes from "./routes/auth.route.js";
 import uploadRoutes from "./routes/upload.route.js";
 import sellerRoutes from "./routes/seller.route.js";
 import productRoutes from "./routes/product.route.js";
+import messageRoutes from "./routes/message.route.js";
+import orderRoutes from "./routes/order.route.js";
+import earningsRoutes from "./routes/earnings.route.js";
+import dashboardRoutes from "./routes/dashboard.route.js";
+import promotionRoutes from "./routes/promotion.route.js";
 import cors from "cors";
 import connection from "./config/db.js";
 
@@ -28,6 +33,11 @@ app.use("/auth", authRoutes);
 app.use("/seller/auth", sellerRoutes);
 app.use("/seller/auth/upload", uploadRoutes);
 app.use("/seller/auth/products", productRoutes);
+app.use("/seller/auth/messages", messageRoutes);
+app.use("/seller/auth/orders", orderRoutes);
+app.use("/seller/auth/earnings", earningsRoutes);
+app.use("/seller/auth/dashboard", dashboardRoutes);
+app.use("/seller/auth/promotions", promotionRoutes);
 app.use("/products", productRoutes);
 app.use("/upload", uploadRoutes);
 

@@ -23,6 +23,29 @@ const sellerSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    phone: {
+        type: String,
+        default: "",
+    },
+    logo: {
+        type: String,
+        default: "",
+    },
+    category: {
+        type: String,
+        default: "",
+    },
+    website: {
+        type: String,
+        default: "",
+    },
+    address: {
+        street: { type: String, default: "" },
+        city: { type: String, default: "" },
+        state: { type: String, default: "" },
+        country: { type: String, default: "" },
+        pincode: { type: String, default: "" },
+    },
     lastLogin: {
         type: Date,
         default: null,
@@ -34,3 +57,4 @@ const sellerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 export default mongoose.model("Seller", sellerSchema);
+

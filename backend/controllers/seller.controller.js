@@ -105,3 +105,88 @@ export const getProfile = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+export const updateProfile = async (req, res) => {
+    try {
+        const { storeName, description, email, phone, logo, category, website, address } = req.body;
+
+        const updateData = {};
+        if (storeName !== undefined) updateData.storeName = storeName;
+        if (description !== undefined) updateData.description = description;
+        if (email !== undefined) updateData.email = email;
+        if (phone !== undefined) updateData.phone = phone;
+        if (logo !== undefined) updateData.logo = logo;
+        if (category !== undefined) updateData.category = category;
+        if (website !== undefined) updateData.website = website;
+        if (address !== undefined) updateData.address = address;
+
+        const seller = await Seller.findByIdAndUpdate(
+            req.user.id,
+            updateData,
+            { new: true }
+        ).select("-password -refreshToken");
+
+        if (!seller) return res.status(404).json({ message: "Seller not found" });
+
+        res.json(seller);
+    } catch (error) {
+        console.error("updateProfile error:", error);
+        res.status(500).json({ message: "Failed to update profile" });
+    }
+};
+
+export const changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ message: "Both current and new password are required" });
+        }
+        if (newPassword.length < 6) {
+            return res.status(400).json({ message: "New password must be at least 6 characters" });
+        }
+
+        const seller = await Seller.findById(req.user.id);
+        if (!seller) return res.status(404).json({ message: "Seller not found" });
+
+        const isMatch = await bcrypt.compare(currentPassword, seller.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Current password is incorrect" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        seller.password = await bcrypt.hash(newPassword, salt);
+        await seller.save();
+
+        res.json({ message: "Password changed successfully" });
+    } catch (error) {
+        console.error("changePassword error:", error);
+        res.status(500).json({ message: "Failed to change password" });
+    }
+};
+
+export const deleteAccount = async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        if (!password) {
+            return res.status(400).json({ message: "Password is required to delete account" });
+        }
+
+        const seller = await Seller.findById(req.user.id);
+        if (!seller) return res.status(404).json({ message: "Seller not found" });
+
+        const isMatch = await bcrypt.compare(password, seller.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Password is incorrect" });
+        }
+
+        await Seller.findByIdAndDelete(req.user.id);
+
+        res.clearCookie("sellerRefreshToken");
+        res.json({ message: "Account deleted successfully" });
+    } catch (error) {
+        console.error("deleteAccount error:", error);
+        res.status(500).json({ message: "Failed to delete account" });
+    }
+};

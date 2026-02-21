@@ -127,6 +127,48 @@ const useProductController = () => {
         }
     };
 
+    const editProduct = async (productId, updatedData) => {
+        try {
+            const payload = {
+                ...updatedData,
+                price: parseFloat(updatedData.price),
+                stock: parseInt(updatedData.stock),
+            };
+            const response = await sellerApi.put(`/products/${productId}`, payload);
+            setProducts(prev => prev.map(p =>
+                (p._id || p.id) === productId ? response.data.product : p
+            ));
+            toast.success('Product updated successfully! ✏️');
+            return true;
+        } catch (error) {
+            console.error("Edit product failed:", error);
+            toast.error(error.response?.data?.message || 'Failed to update product');
+            return false;
+        }
+    };
+
+    const duplicateProduct = async (product) => {
+        try {
+            const payload = {
+                name: `${product.name} (Copy)`,
+                description: product.description || '',
+                category: product.category || 'Electronics',
+                price: product.price,
+                discount: product.discount || 0,
+                stock: product.stock,
+                sku: '',
+                status: 'Draft',
+                images: product.images || [],
+            };
+            const response = await sellerApi.post("/products", payload);
+            setProducts(prev => [response.data.product, ...prev]);
+            toast.success('Product duplicated! 📋');
+        } catch (error) {
+            console.error("Duplicate product failed:", error);
+            toast.error(error.response?.data?.message || 'Failed to duplicate product');
+        }
+    };
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -138,13 +180,17 @@ const useProductController = () => {
         isUploading,
         formData,
         errors,
+        setFormData,
+        setErrors,
         handleInputChange,
         handleImageUpload,
         removeImage,
         handleSave,
-        deleteProduct
+        deleteProduct,
+        editProduct,
+        duplicateProduct,
+        INITIAL_FORM_DATA,
     };
 };
 
 export default useProductController;
-

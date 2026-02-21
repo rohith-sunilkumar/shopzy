@@ -48,7 +48,7 @@ const App = () => {
                   <Route path="promotions" element={<Promotions />} />
                   <Route path="messages" element={<Messages />} />
                   <Route path="reviews" element={<Reviews />} />
-                  <Route path="settings" element={<Settings />} />
+                  <Route path="settings/*" element={<Settings />} />
                 </Route>
               </Routes>
             </div>
