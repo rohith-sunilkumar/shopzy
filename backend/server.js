@@ -12,6 +12,8 @@ import earningsRoutes from "./routes/earnings.route.js";
 import dashboardRoutes from "./routes/dashboard.route.js";
 import promotionRoutes from "./routes/promotion.route.js";
 import otpAuthRoutes from "./routes/otpAuth.route.js";
+import adminAuthRoutes from "./routes/adminAuth.route.js";
+import adminRoutes from "./routes/admin.route.js";
 import cors from "cors";
 import connection from "./config/db.js";
 
@@ -33,6 +35,8 @@ app.use(cookieParser());
 
 app.use("/auth", authRoutes);
 app.use("/auth/otp", otpAuthRoutes);
+app.use("/admin/auth", adminAuthRoutes);
+app.use("/admin", adminRoutes);
 app.use("/auth/google", googleAuthRoutes);
 app.use("/seller/auth", sellerRoutes);
 app.use("/seller/auth/upload", uploadRoutes);

@@ -88,6 +88,8 @@ export const refresh = (req, res) => {
             process.env.JWT_REFRESH_SECRET
         );
 
+        if (decoded.role !== 'seller') return res.sendStatus(403);
+
         const accessToken = generateAccessToken({ id: decoded.id, role: 'seller' });
 
         res.json({ accessToken });

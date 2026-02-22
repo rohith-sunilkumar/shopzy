@@ -9,9 +9,10 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import PhoneAuth from './PhoneAuth';
 import { useGoogleLogin } from '@react-oauth/google';
-import { Smartphone, Mail } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import SocialLogin from './SocialLogin';
+import MethodToggle from './MethodToggle';
 
 const AuthDialog = () => {
     const { isAuthOpen, closeAuth, authMode, setAuthMode, accessToken, login } = useAuth();
@@ -140,40 +141,11 @@ const AuthDialog = () => {
                                 <Tabs.Content value="login" className="animate-in fade-in slide-in-from-bottom-2 duration-300 outline-none">
                                     {/* Social Login Section */}
                                     {googleClientId && (
-                                        <div className="space-y-4 mb-8">
-                                            <button
-                                                onClick={() => googleLogin()}
-                                                className="w-full py-3 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-3 font-bold text-gray-700 hover:bg-gray-50 transition-all hover:border-gray-300"
-                                            >
-                                                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google" className="w-5 h-5" />
-                                                Continue with Google
-                                            </button>
-
-                                            <div className="relative flex items-center gap-4">
-                                                <div className="h-px bg-gray-100 flex-1"></div>
-                                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">or</span>
-                                                <div className="h-px bg-gray-100 flex-1"></div>
-                                            </div>
-                                        </div>
+                                        <SocialLogin googleLogin={googleLogin} />
                                     )}
 
                                     {/* Method Toggle */}
-                                    <div className="flex bg-gray-50 p-1 rounded-xl mb-6">
-                                        <button
-                                            onClick={() => setLoginMethod('email')}
-                                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${loginMethod === 'email' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
-                                        >
-                                            <Mail className="w-3.5 h-3.5" />
-                                            Email
-                                        </button>
-                                        <button
-                                            onClick={() => setLoginMethod('phone')}
-                                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${loginMethod === 'phone' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
-                                        >
-                                            <Smartphone className="w-3.5 h-3.5" />
-                                            Phone
-                                        </button>
-                                    </div>
+                                    <MethodToggle loginMethod={loginMethod} setLoginMethod={setLoginMethod} />
 
                                     {loginMethod === 'email' ? (
                                         <LoginForm
@@ -199,22 +171,7 @@ const AuthDialog = () => {
 
                                 <Tabs.Content value="register" className="animate-in fade-in slide-in-from-bottom-2 duration-300 outline-none">
                                     {/* Method Toggle */}
-                                    <div className="flex bg-gray-50 p-1 rounded-xl mb-6">
-                                        <button
-                                            onClick={() => setLoginMethod('email')}
-                                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${loginMethod === 'email' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
-                                        >
-                                            <Mail className="w-3.5 h-3.5" />
-                                            Email
-                                        </button>
-                                        <button
-                                            onClick={() => setLoginMethod('phone')}
-                                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${loginMethod === 'phone' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
-                                        >
-                                            <Smartphone className="w-3.5 h-3.5" />
-                                            Phone
-                                        </button>
-                                    </div>
+                                    <MethodToggle loginMethod={loginMethod} setLoginMethod={setLoginMethod} />
 
                                     {loginMethod === 'email' ? (
                                         <RegisterForm

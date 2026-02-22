@@ -42,7 +42,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "Password not matched" });
     user.lastLogin = new Date();
     await user.save();
-    const payload = { id: user._id };
+    const payload = { id: user._id, role: 'user' };
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);
 
@@ -98,7 +98,9 @@ export const refresh = (req, res) => {
       process.env.JWT_REFRESH_SECRET
     );
 
-    const accessToken = generateAccessToken({ id: decoded.id });
+    if (decoded.role !== 'user') return res.sendStatus(403);
+
+    const accessToken = generateAccessToken({ id: decoded.id, role: 'user' });
 
     res.json({ accessToken });
   } catch {

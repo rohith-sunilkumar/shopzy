@@ -19,43 +19,62 @@ import Reviews from "./views/pages/seller/Reviews";
 import Settings from "./views/pages/seller/Settings";
 import { Toaster } from "react-hot-toast";
 
+import { AdminAuthProvider } from "./models/AdminAuthContext";
+import AdminProtectedRoute from "./views/components/admin/AdminProtectedRoute";
+import AdminLayout from "./views/components/admin/AdminLayout";
+import AdminDashboard from "./views/pages/admin/Dashboard";
+import AdminUsers from "./views/pages/admin/Users";
+import AdminSellers from "./views/pages/admin/Sellers";
+import AdminLogin from "./views/pages/admin/AdminLogin";
+
 const AppContent = () => {
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
-      <SellerAuthProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <div className="min-h-screen">
-              <Routes>
-                {/* User Routes */}
-                <Route path="/" element={<UserLayout />}>
-                  <Route index element={<Dashboard />} />
-                  <Route path="cart" element={<Cart />} />
-                  <Route path="dashboard" element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  } />
-                </Route>
+      <AdminAuthProvider>
+        <SellerAuthProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <div className="min-h-screen">
+                <Routes>
+                  {/* User Routes */}
+                  <Route path="/" element={<UserLayout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="cart" element={<Cart />} />
+                    <Route path="dashboard" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
+                  </Route>
 
-                {/* Seller Routes */}
-                <Route path="/seller" element={<SellerProtectedRoute><SellerLayout /></SellerProtectedRoute>}>
-                  <Route index element={<Overview />} />
-                  <Route path="overview" element={<Overview />} />
-                  <Route path="products" element={<Products />} />
-                  <Route path="orders" element={<Orders />} />
-                  <Route path="earnings" element={<Earnings />} />
-                  <Route path="promotions" element={<Promotions />} />
-                  <Route path="messages" element={<Messages />} />
-                  <Route path="reviews" element={<Reviews />} />
-                  <Route path="settings/*" element={<Settings />} />
-                </Route>
-              </Routes>
-            </div>
-          </BrowserRouter>
-        </AuthProvider>
-      </SellerAuthProvider>
+                  {/* Seller Routes */}
+                  <Route path="/seller" element={<SellerProtectedRoute><SellerLayout /></SellerProtectedRoute>}>
+                    <Route index element={<Overview />} />
+                    <Route path="overview" element={<Overview />} />
+                    <Route path="products" element={<Products />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="earnings" element={<Earnings />} />
+                    <Route path="promotions" element={<Promotions />} />
+                    <Route path="messages" element={<Messages />} />
+                    <Route path="reviews" element={<Reviews />} />
+                    <Route path="settings/*" element={<Settings />} />
+                  </Route>
+
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="sellers" element={<AdminSellers />} />
+                  </Route>
+
+                </Routes>
+              </div>
+            </BrowserRouter>
+          </AuthProvider>
+        </SellerAuthProvider>
+      </AdminAuthProvider>
     </>
   );
 };
