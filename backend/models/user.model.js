@@ -7,20 +7,33 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
     unique: true,
+    sparse: true, // Allows null/missing values while maintaining uniqueness for others
   },
   password: {
     type: String,
-    required: true,
+  },
+  phoneNumber: {
+    type: String,
+    unique: true,
+    sparse: true,
+    index: true,
   },
   lastLogin: {
     type: Date,
     default: null,
   },
-  refreshToken:{
-    type:String,
-    default:null,
+  refreshToken: {
+    type: String,
+    default: null,
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  avatar: {
+    type: String,
   }
 });
 

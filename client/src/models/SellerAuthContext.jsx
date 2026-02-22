@@ -102,6 +102,7 @@ export const SellerAuthProvider = ({ children }) => {
                     setSeller(response.data);
                 } else {
                     // No access token — try refreshing from cookie
+                    // Small optimization: only refresh if we might have a session
                     const newToken = await refreshSellerToken();
                     if (newToken) {
                         const response = await sellerApi.get("/profile");
@@ -109,8 +110,10 @@ export const SellerAuthProvider = ({ children }) => {
                     }
                 }
             } catch (error) {
-                // Profile fetch failed even after interceptor tried refresh
-                console.error("Seller session verification failed:", error);
+                // Profile fetch failed даже after interceptor tried refresh
+                if (error.response?.status !== 401) {
+                    console.error("Seller session verification failed:", error);
+                }
                 localStorage.removeItem("sellerToken");
                 setSellerToken(null);
                 setSeller(null);

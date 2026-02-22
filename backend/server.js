@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
+import googleAuthRoutes from "./routes/googleAuth.route.js";
 import uploadRoutes from "./routes/upload.route.js";
 import sellerRoutes from "./routes/seller.route.js";
 import productRoutes from "./routes/product.route.js";
@@ -10,6 +11,7 @@ import orderRoutes from "./routes/order.route.js";
 import earningsRoutes from "./routes/earnings.route.js";
 import dashboardRoutes from "./routes/dashboard.route.js";
 import promotionRoutes from "./routes/promotion.route.js";
+import otpAuthRoutes from "./routes/otpAuth.route.js";
 import cors from "cors";
 import connection from "./config/db.js";
 
@@ -30,6 +32,8 @@ app.use(
 app.use(cookieParser());
 
 app.use("/auth", authRoutes);
+app.use("/auth/otp", otpAuthRoutes);
+app.use("/auth/google", googleAuthRoutes);
 app.use("/seller/auth", sellerRoutes);
 app.use("/seller/auth/upload", uploadRoutes);
 app.use("/seller/auth/products", productRoutes);

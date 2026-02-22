@@ -38,6 +38,16 @@ export const createProduct = async (req, res) => {
     }
 };
 
+export const getAllProducts = async (req, res) => {
+    try {
+        const products = await Product.find({ status: 'Active' }).sort({ createdAt: -1 });
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Get All Products error:", error);
+        res.status(500).json({ message: "Server error while fetching products" });
+    }
+};
+
 export const getSellerProducts = async (req, res) => {
     try {
         const products = await Product.find({ seller: req.user.id }).sort({ createdAt: -1 });

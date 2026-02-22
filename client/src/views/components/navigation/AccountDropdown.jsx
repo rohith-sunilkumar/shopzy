@@ -86,22 +86,22 @@ const AccountDropdown = ({
                             </div>
                         </div>
 
-                        <DropdownMenu.Item shortcut="⌘ P">
+                        <DropdownMenu.Item>
                             <div className="flex items-center">
                                 <User className="w-4 h-4 mr-2 text-gray-400 group-hover:text-indigo-600" /> My Profile
                             </div>
                         </DropdownMenu.Item>
-                        <DropdownMenu.Item shortcut="⌘ O">
+                        <DropdownMenu.Item>
                             <div className="flex items-center">
                                 <Package className="w-4 h-4 mr-2 text-gray-400 group-hover:text-indigo-600" /> My Orders
                             </div>
                         </DropdownMenu.Item>
-                        <DropdownMenu.Item shortcut="⌘ A">
+                        <DropdownMenu.Item>
                             <div className="flex items-center">
                                 <MapPin className="w-4 h-4 mr-2 text-gray-400 group-hover:text-indigo-600" /> Addresses
                             </div>
                         </DropdownMenu.Item>
-                        <DropdownMenu.Item shortcut="⌘ W">
+                        <DropdownMenu.Item>
                             <div className="flex items-center">
                                 <Heart className="w-4 h-4 mr-2 text-gray-400 group-hover:text-indigo-600" /> Wishlist
                             </div>

@@ -64,7 +64,7 @@ const HeroCarousel = () => {
             className="relative w-full overflow-hidden group"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            style={{ height: '350px' }}
+            style={{ height: '450px' }}
         >
             {/* Slides */}
             <div

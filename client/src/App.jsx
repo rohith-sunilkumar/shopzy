@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Theme } from "@radix-ui/themes";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import Dashboard from "./views/pages/Dashboard";
 import Cart from "./views/pages/Cart";
 import { AuthProvider } from "./models/AuthContext";
@@ -18,9 +19,9 @@ import Reviews from "./views/pages/seller/Reviews";
 import Settings from "./views/pages/seller/Settings";
 import { Toaster } from "react-hot-toast";
 
-const App = () => {
+const AppContent = () => {
   return (
-    <Theme accentColor="indigo" panelBackground="translucent">
+    <>
       <Toaster position="top-right" reverseOrder={false} />
       <SellerAuthProvider>
         <AuthProvider>
@@ -55,6 +56,22 @@ const App = () => {
           </BrowserRouter>
         </AuthProvider>
       </SellerAuthProvider>
+    </>
+  );
+};
+
+const App = () => {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  return (
+    <Theme accentColor="indigo" panelBackground="translucent">
+      {googleClientId ? (
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <AppContent />
+        </GoogleOAuthProvider>
+      ) : (
+        <AppContent />
+      )}
     </Theme>
   );
 };

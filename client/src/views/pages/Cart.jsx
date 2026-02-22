@@ -1,65 +1,33 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Tag, Truck, ShieldCheck } from 'lucide-react';
-
-const initialCartItems = [
-    {
-        id: 1,
-        name: 'Premium Wireless Headphones',
-        brand: 'SoundMax',
-        price: 4999,
-        originalPrice: 7999,
-        quantity: 1,
-        image: 'https://placehold.co/120x120/f0f4ff/4f46e5?text=🎧',
-        color: 'Midnight Black',
-        inStock: true
-    },
-    {
-        id: 2,
-        name: 'Classic Cotton T-Shirt',
-        brand: 'UrbanWear',
-        price: 899,
-        originalPrice: 1499,
-        quantity: 2,
-        image: 'https://placehold.co/120x120/f0fdf4/16a34a?text=👕',
-        color: 'Navy Blue',
-        inStock: true
-    },
-    {
-        id: 3,
-        name: 'Smart Fitness Band Pro',
-        brand: 'FitTech',
-        price: 2499,
-        originalPrice: 3999,
-        quantity: 1,
-        image: 'https://placehold.co/120x120/fef2f2/dc2626?text=⌚',
-        color: 'Space Grey',
-        inStock: true
-    }
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { updateQuantity, removeFromCart } from '../../features/cart/cartSlice';
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState(initialCartItems);
+    const dispatch = useDispatch();
+    const { cartItems, totalAmount, totalQuantity } = useSelector((state) => state.cart);
+
     const [couponCode, setCouponCode] = useState('');
     const [couponApplied, setCouponApplied] = useState(false);
 
-    const updateQuantity = (id, delta) => {
-        setCartItems(items =>
-            items.map(item =>
-                item.id === id
-                    ? { ...item, quantity: Math.max(1, Math.min(10, item.quantity + delta)) }
-                    : item
-            )
-        );
+    const handleUpdateQuantity = (id, newQuantity) => {
+        dispatch(updateQuantity({ id, quantity: newQuantity }));
     };
 
-    const removeItem = (id) => {
-        setCartItems(items => items.filter(item => item.id !== id));
+    const handleRemoveItem = (id) => {
+        dispatch(removeFromCart(id));
     };
 
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const totalSaved = cartItems.reduce((sum, item) => sum + (item.originalPrice - item.price) * item.quantity, 0);
-    const shipping = subtotal > 999 ? 0 : 99;
+    // Calculate dynamic savings and shipping
+    const totalSaved = cartItems.reduce((sum, item) => {
+        // Assume missing originalPrice means no discount for that item
+        const original = item.originalPrice || item.price;
+        return sum + (original - item.price) * item.quantity;
+    }, 0);
+
+    const subtotal = totalAmount;
+    const shipping = subtotal > 999 || subtotal === 0 ? 0 : 99;
     const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
     const total = subtotal + shipping - discount;
 
@@ -144,7 +112,7 @@ const Cart = () => {
                                             <p className="text-sm text-gray-500 mt-1">Color: {item.color}</p>
                                         </div>
                                         <button
-                                            onClick={() => removeItem(item.id)}
+                                            onClick={() => handleRemoveItem(item.id)}
                                             className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
                                             title="Remove item"
                                         >
@@ -169,7 +137,7 @@ const Cart = () => {
                                         {/* Quantity Controls */}
                                         <div className="flex items-center gap-0.5 bg-gray-50 rounded-xl border border-gray-200 p-0.5">
                                             <button
-                                                onClick={() => updateQuantity(item.id, -1)}
+                                                onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                                                 disabled={item.quantity <= 1}
                                                 className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 hover:bg-white hover:shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                                             >
@@ -177,7 +145,7 @@ const Cart = () => {
                                             </button>
                                             <span className="w-8 text-center text-sm font-bold text-gray-900">{item.quantity}</span>
                                             <button
-                                                onClick={() => updateQuantity(item.id, 1)}
+                                                onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                                                 disabled={item.quantity >= 10}
                                                 className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 hover:bg-white hover:shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                                             >

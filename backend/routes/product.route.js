@@ -1,6 +1,7 @@
 import express from "express";
 import {
     createProduct,
+    getAllProducts,
     getSellerProducts,
     updateProduct,
     deleteProduct
@@ -8,6 +9,9 @@ import {
 import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
+
+// Public route for all shoppers
+router.get("/", getAllProducts);
 
 // All product routes for sellers are protected
 router.use(verifyToken);
