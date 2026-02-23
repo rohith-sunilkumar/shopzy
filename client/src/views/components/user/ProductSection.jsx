@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import ProductSkeleton from './ProductSkeleton';
-import { Sparkles, PackageX } from 'lucide-react';
+import { Sparkles, PackageX, ChevronRight } from 'lucide-react';
 
 const ProductSection = ({
     products,
@@ -11,20 +11,23 @@ const ProductSection = ({
     title = "Featured Products",
     subtitle = "Handpicked For You",
     Icon = Sparkles,
-    bgColor = "bg-gray-50/50"
+    bgColor = "bg-white"
 }) => {
 
     // 1. Loading State
     if (loading) {
         return (
-            <section className={`${bgColor} py-16 sm:py-24`}>
+            <section className={`${bgColor} py-20`}>
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-pulse">
-                        <div className="w-64 h-12 bg-gray-200 rounded"></div>
+                        <div>
+                            <div className="w-32 h-4 bg-gray-200 rounded mb-4"></div>
+                            <div className="w-64 h-10 bg-gray-200 rounded"></div>
+                        </div>
                         <div className="w-48 h-10 bg-gray-200 rounded-full"></div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-6 gap-y-10">
-                        {[...Array(10)].map((_, i) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                        {[...Array(8)].map((_, i) => (
                             <ProductSkeleton key={i} />
                         ))}
                     </div>
@@ -36,12 +39,12 @@ const ProductSection = ({
     // 2. Error State
     if (error) {
         return (
-            <div className={`max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center min-h-[400px] flex flex-col items-center justify-center ${bgColor}`}>
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <PackageX className="w-8 h-8 text-red-600" />
+            <div className={`max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center min-h-[400px] flex flex-col items-center justify-center ${bgColor}`}>
+                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <PackageX className="w-10 h-10 text-red-500" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Oops! We encountered a snag.</h3>
-                <p className="text-gray-500 mt-2 max-w-md mx-auto">{error}</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong.</h3>
+                <p className="text-gray-500 max-w-md mx-auto">{error}</p>
             </div>
         );
     }
@@ -53,29 +56,34 @@ const ProductSection = ({
 
     // 4. Success Grid State
     return (
-        <section className={`${bgColor} py-16 sm:py-24`}>
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <section className={`${bgColor} py-20 relative overflow-hidden group/section`}>
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-gray-100 pb-6">
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <Icon className="w-5 h-5 text-indigo-600" aria-hidden="true" />
-                            <span className="text-sm font-bold text-indigo-600 tracking-wider uppercase">{subtitle}</span>
+                            <Icon className="w-4 h-4 text-indigo-600" aria-hidden="true" />
+                            <span className="text-xs font-black text-indigo-600 tracking-[0.2em] uppercase">{subtitle}</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
                             {title}
                         </h2>
                     </div>
-                    {/* View All Button Mock */}
-                    <button className="text-sm font-bold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 px-5 py-2.5 rounded-full transition-colors self-start md:self-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
-                        View Complete Collection →
+
+                    {/* View All Button */}
+                    <button className="group flex items-center gap-2 text-sm font-semibold text-gray-900 hover:text-indigo-600 transition-colors self-start md:self-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-md py-2">
+                        View Collection
+                        <span className="bg-gray-100 group-hover:bg-indigo-100 text-gray-500 group-hover:text-indigo-600 p-1.5 rounded-full transition-colors">
+                            <ChevronRight className="w-4 h-4" />
+                        </span>
                     </button>
                 </div>
 
                 {/* Products Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-6 gap-y-10">
-                    {products.map((product) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                    {/* Only taking 8 products to keep the grid neat for enterprise feel, usually a single row or two neat rows */}
+                    {products.slice(0, 8).map((product) => (
                         <ProductCard
                             key={product._id}
                             product={product}
@@ -85,6 +93,10 @@ const ProductSection = ({
                 </div>
 
             </div>
+
+            {/* Subtle background decoration */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-indigo-50 rounded-full blur-3xl opacity-30 pointer-events-none transition-opacity duration-700 group-hover/section:opacity-50"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-purple-50 rounded-full blur-3xl opacity-30 pointer-events-none hidden md:block transition-opacity duration-700 group-hover/section:opacity-50"></div>
         </section>
     );
 };

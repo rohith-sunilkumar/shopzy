@@ -26,6 +26,7 @@ import AdminDashboard from "./views/pages/admin/Dashboard";
 import AdminUsers from "./views/pages/admin/Users";
 import AdminSellers from "./views/pages/admin/Sellers";
 import AdminLogin from "./views/pages/admin/AdminLogin";
+import AdminMarketing from "./views/pages/admin/Marketing";
 
 const AppContent = () => {
   return (
@@ -67,6 +68,7 @@ const AppContent = () => {
                     <Route index element={<AdminDashboard />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="sellers" element={<AdminSellers />} />
+                    <Route path="marketing" element={<AdminMarketing />} />
                   </Route>
 
                 </Routes>

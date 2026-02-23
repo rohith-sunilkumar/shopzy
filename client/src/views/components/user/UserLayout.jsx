@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../Navbar";
 import AuthDialog from "../auth/AuthDialog";
 import SellerAuthDialog from "../auth/SellerAuthDialog";
+import Footer from "../Footer";
 
 const UserLayout = () => {
     return (
@@ -12,6 +13,7 @@ const UserLayout = () => {
             <div className="flex-1">
                 <Outlet />
             </div>
+            <Footer />
         </div>
     );
 };

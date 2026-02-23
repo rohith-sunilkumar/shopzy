@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../services/axiosInstance';
 
 const slides = [
     {
@@ -29,35 +31,73 @@ const slides = [
     {
         image: '/banners/toys.png',
         alt: 'Toys & Games - Fun for Everyone',
+        linkUrl: '/products?category=Toys',
+        title: 'Toys & Games - Fun for Everyone'
     },
 ];
 
 const HeroCarousel = () => {
+    const [banners, setBanners] = useState([]);
     const [current, setCurrent] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
+    const navigate = useNavigate();
+
+    // Fetch dynamic banners
+    useEffect(() => {
+        const fetchBanners = async () => {
+            try {
+                const { data } = await axiosInstance.get('/banners/active');
+                if (data && data.length > 0) {
+                    setBanners(data);
+                } else {
+                    setBanners(slides); // Fallback to static
+                }
+            } catch (error) {
+                console.error('Failed to fetch banners, using fallback.', error);
+                setBanners(slides); // Fallback on error
+            }
+        };
+        fetchBanners();
+    }, []);
+
     const goTo = useCallback((index) => {
-        if (isTransitioning) return;
+        if (isTransitioning || banners.length === 0) return;
         setIsTransitioning(true);
         setCurrent(index);
         setTimeout(() => setIsTransitioning(false), 500);
-    }, [isTransitioning]);
+    }, [isTransitioning, banners.length]);
 
     const goNext = useCallback(() => {
-        goTo((current + 1) % slides.length);
-    }, [current, goTo]);
+        if (banners.length <= 1) return;
+        goTo((current + 1) % banners.length);
+    }, [current, goTo, banners.length]);
 
     const goPrev = useCallback(() => {
-        goTo((current - 1 + slides.length) % slides.length);
-    }, [current, goTo]);
+        if (banners.length <= 1) return;
+        goTo((current - 1 + banners.length) % banners.length);
+    }, [current, goTo, banners.length]);
 
     // Auto-play
     useEffect(() => {
-        if (isPaused) return;
+        if (isPaused || banners.length <= 1) return;
         const timer = setInterval(goNext, 4000);
         return () => clearInterval(timer);
-    }, [isPaused, goNext]);
+    }, [isPaused, goNext, banners.length]);
+
+    const handleSlideClick = (linkUrl) => {
+        if (!linkUrl) return;
+
+        // Check if external or internal link
+        if (linkUrl.startsWith('http')) {
+            window.open(linkUrl, '_blank');
+        } else {
+            navigate(linkUrl);
+        }
+    };
+
+    if (banners.length === 0) return null;
 
     return (
         <div
@@ -71,14 +111,25 @@ const HeroCarousel = () => {
                 className="flex h-full transition-transform duration-500 ease-out"
                 style={{ transform: `translateX(-${current * 100}%)` }}
             >
-                {slides.map((slide, i) => (
-                    <div key={i} className="w-full h-full flex-shrink-0">
+                {banners.map((slide, i) => (
+                    <div key={i} className="w-full h-full flex-shrink-0 relative">
                         <img
                             src={slide.image}
-                            alt={slide.alt}
+                            alt={slide.title || slide.alt || 'Banner'}
                             className="w-full h-full object-cover"
                             draggable={false}
                         />
+                        {/* Overlay and Button Layer */}
+                        {slide.linkUrl && (
+                            <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <button
+                                    onClick={() => handleSlideClick(slide.linkUrl)}
+                                    className="bg-white text-indigo-900 px-8 py-3 rounded-full font-bold shadow-2xl hover:bg-indigo-600 hover:text-white hover:scale-105 transition-all flex items-center gap-2 pointer-events-auto"
+                                >
+                                    Explore Collection <ExternalLink className="w-4 h-4" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
@@ -104,19 +155,21 @@ const HeroCarousel = () => {
             </button>
 
             {/* Dots */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-                {slides.map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => goTo(i)}
-                        aria-label={`Go to slide ${i + 1}`}
-                        className={`rounded-full transition-all duration-300 ${i === current
-                            ? 'w-8 h-2.5 bg-white shadow-md'
-                            : 'w-2.5 h-2.5 bg-white/50 hover:bg-white/80'
-                            }`}
-                    />
-                ))}
-            </div>
+            {banners.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+                    {banners.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => goTo(i)}
+                            aria-label={`Go to slide ${i + 1}`}
+                            className={`rounded-full transition-all duration-300 ${i === current
+                                ? 'w-8 h-2.5 bg-white shadow-md'
+                                : 'w-2.5 h-2.5 bg-white/50 hover:bg-white/80'
+                                }`}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

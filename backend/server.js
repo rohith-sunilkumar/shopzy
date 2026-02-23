@@ -11,6 +11,7 @@ import orderRoutes from "./routes/order.route.js";
 import earningsRoutes from "./routes/earnings.route.js";
 import dashboardRoutes from "./routes/dashboard.route.js";
 import promotionRoutes from "./routes/promotion.route.js";
+import bannerRoutes from "./routes/banner.route.js";
 import otpAuthRoutes from "./routes/otpAuth.route.js";
 import adminAuthRoutes from "./routes/adminAuth.route.js";
 import adminRoutes from "./routes/admin.route.js";
@@ -48,6 +49,7 @@ app.use("/seller/auth/dashboard", dashboardRoutes);
 app.use("/seller/auth/promotions", promotionRoutes);
 app.use("/products", productRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/banners", bannerRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
