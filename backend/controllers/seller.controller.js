@@ -78,7 +78,7 @@ export const logout = async (req, res) => {
     res.sendStatus(204);
 };
 
-export const refresh = (req, res) => {
+export const refresh = async (req, res) => {
     const token = req.cookies.sellerRefreshToken;
     if (!token) return res.sendStatus(401);
 
@@ -90,8 +90,13 @@ export const refresh = (req, res) => {
 
         if (decoded.role !== 'seller') return res.sendStatus(403);
 
-        const accessToken = generateAccessToken({ id: decoded.id, role: 'seller' });
+        const seller = await Seller.findById(decoded.id);
+        if (!seller || seller.refreshToken !== token) {
+            res.clearCookie("sellerRefreshToken");
+            return res.sendStatus(401);
+        }
 
+        const accessToken = generateAccessToken({ id: decoded.id, role: 'seller' });
         res.json({ accessToken });
     } catch {
         return res.sendStatus(403);
@@ -101,9 +106,13 @@ export const refresh = (req, res) => {
 export const getProfile = async (req, res) => {
     try {
         const seller = await Seller.findById(req.user.id).select("-password -refreshToken");
-        if (!seller) return res.status(404).json({ message: "Seller not found" });
+        if (!seller) {
+            console.warn(`Seller with ID ${req.user.id} not found in database`);
+            return res.status(404).json({ message: "Seller not found" });
+        }
         res.json(seller);
     } catch (error) {
+        console.error("getProfile error:", error);
         res.status(500).json({ message: "Server error" });
     }
 };

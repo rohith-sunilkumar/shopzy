@@ -48,6 +48,25 @@ export const getAllProducts = async (req, res) => {
     }
 };
 
+export const getProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id).populate('seller', 'businessName logo');
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        res.status(200).json(product);
+    } catch (error) {
+        console.error("Get Product By ID error:", error);
+        if (error.kind === 'ObjectId') {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(500).json({ message: "Server error while fetching product" });
+    }
+};
+
 export const getSellerProducts = async (req, res) => {
     try {
         const products = await Product.find({ seller: req.user.id }).sort({ createdAt: -1 });

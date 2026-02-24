@@ -8,8 +8,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 /**
  * Verifies Google ID Token and authenticates the user.
  */
@@ -21,6 +19,7 @@ export const googleLogin = async (req, res) => {
     }
 
     try {
+        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
         const ticket = await client.verifyIdToken({
             idToken,
             audience: process.env.GOOGLE_CLIENT_ID,
@@ -53,7 +52,7 @@ export const googleLogin = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
 
-        const tokenPayload = { id: user._id };
+        const tokenPayload = { id: user._id, role: 'user' };
         const accessToken = generateAccessToken(tokenPayload);
         const refreshToken = generateRefreshToken(tokenPayload);
 

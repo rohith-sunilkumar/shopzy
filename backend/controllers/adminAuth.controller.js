@@ -77,3 +77,37 @@ export const seedAdmin = async (req, res) => {
         res.status(500).json({ message: "Server error during seed" });
     }
 };
+
+/**
+ * Create a new admin with custom credentials.
+ * POST /admin/auth/create
+ * Body: { email, password }
+ */
+export const createAdmin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters" });
+        }
+
+        const exist = await Admin.findOne({ email });
+        if (exist) return res.status(400).json({ message: "Admin with this email already exists" });
+
+        const hashed = await bcrypt.hash(password, 10);
+        const admin = await Admin.create({
+            email,
+            password: hashed,
+        });
+
+        res.status(201).json({
+            message: "Admin created successfully",
+            email: admin.email,
+        });
+    } catch (error) {
+        console.error("Create admin error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};

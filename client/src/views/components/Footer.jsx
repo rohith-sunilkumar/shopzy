@@ -17,30 +17,6 @@ const Footer = () => {
 
     return (
         <footer className="bg-gray-900 text-gray-300">
-            {/* Top section with newsletter/cta */}
-            <div className="border-b border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div>
-                            <h3 className="text-2xl font-bold text-white mb-2">Subscribe to our newsletter</h3>
-                            <p className="text-gray-400">Get the latest updates on new products and upcoming sales.</p>
-                        </div>
-                        <div className="flex w-full md:justify-end">
-                            <div className="flex w-full max-w-md">
-                                <input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className="w-full bg-gray-800 border-gray-700 text-white px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                />
-                                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-r-lg font-medium transition-colors flex items-center">
-                                    Subscribe
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* Main footer content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">

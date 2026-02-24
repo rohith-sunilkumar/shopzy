@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifySeller } from "../middlewares/verifySeller.js";
 import {
     getPromotions,
     createPromotion,
@@ -9,9 +9,9 @@ import {
 
 const router = express.Router();
 
-router.get("/", verifyToken, getPromotions);
-router.post("/", verifyToken, createPromotion);
-router.patch("/:id/status", verifyToken, updatePromotionStatus);
-router.delete("/:id", verifyToken, deletePromotion);
+router.get("/", verifySeller, getPromotions);
+router.post("/", verifySeller, createPromotion);
+router.patch("/:id/status", verifySeller, updatePromotionStatus);
+router.delete("/:id", verifySeller, deletePromotion);
 
 export default router;

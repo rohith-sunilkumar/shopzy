@@ -6,13 +6,13 @@ import {
   register,
   refresh,
 } from "../controllers/auth.controller.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifyUser } from "../middlewares/verifyUser.js";
 
 const router = express.Router();
 
 router.post("/login", login);
 router.post("/register", register);
-router.get("/dashboard", verifyToken, dashboard);
+router.get("/dashboard", verifyUser, dashboard);
 router.post("/logout", logout);
 router.get("/refresh", refresh);
 

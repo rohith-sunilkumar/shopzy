@@ -1,5 +1,5 @@
-import React from 'react';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import { LineChart, Line } from 'recharts';
+import ChartWrapper from '../../components/ChartWrapper';
 import { IndianRupee, ShoppingBag, Package, TrendingUp, Wallet, Clock, CreditCard, Loader2 } from 'lucide-react';
 import useOverviewController from '../../../controllers/useOverviewController';
 import OverviewAlerts from '../../components/seller/OverviewAlerts';
@@ -24,12 +24,12 @@ const StatCard = ({ title, value, icon: Icon, data }) => {
                     <p className="text-xs text-gray-500 font-medium">From your store</p>
                 </div>
                 {data && data.length > 0 && (
-                    <div className="w-16 h-10 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <ResponsiveContainer width="100%" height="100%">
+                    <div className="w-16 opacity-60 group-hover:opacity-100 transition-opacity">
+                        <ChartWrapper height={40}>
                             <LineChart data={data}>
                                 <Line type="monotone" dataKey="v" stroke={color} strokeWidth={2.5} dot={false} isAnimationActive={false} />
                             </LineChart>
-                        </ResponsiveContainer>
+                        </ChartWrapper>
                     </div>
                 )}
             </div>

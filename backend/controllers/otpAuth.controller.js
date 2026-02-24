@@ -78,7 +78,7 @@ class OTPAuthController {
             }
 
             // Issue JWT
-            const payload = { id: user._id };
+            const payload = { id: user._id, role: 'user' };
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
 

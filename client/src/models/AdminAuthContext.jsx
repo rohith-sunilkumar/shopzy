@@ -78,24 +78,29 @@ export const AdminAuthProvider = ({ children }) => {
     }, [adminToken]);
 
     useEffect(() => {
-        const verifyAdminSession = async () => {
+        const controller = new AbortController();
+        const verifyAdminSession = async (signal) => {
             try {
                 if (!adminToken) {
                     const newToken = await refreshAdminToken();
                     if (newToken) {
-                        await adminApi.get("/stats");
+                        await adminApi.get("/stats", { signal });
                     }
                 } else {
-                    await adminApi.get("/stats");
+                    await adminApi.get("/stats", { signal });
                 }
             } catch (error) {
+                if (error.name === 'CanceledError' || error.name === 'AbortError') {
+                    return;
+                }
                 localStorage.removeItem("adminToken");
                 setAdminToken(null);
             } finally {
                 setAdminLoading(false);
             }
         };
-        verifyAdminSession();
+        verifyAdminSession(controller.signal);
+        return () => controller.abort();
     }, []);
 
     return (

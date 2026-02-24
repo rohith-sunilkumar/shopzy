@@ -1,10 +1,10 @@
 import express from "express";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifySeller } from "../middlewares/verifySeller.js";
 import { getEarnings, requestWithdrawal } from "../controllers/earnings.controller.js";
 
 const router = express.Router();
 
-router.get("/", verifyToken, getEarnings);
-router.post("/withdraw", verifyToken, requestWithdrawal);
+router.get("/", verifySeller, getEarnings);
+router.post("/withdraw", verifySeller, requestWithdrawal);
 
 export default router;

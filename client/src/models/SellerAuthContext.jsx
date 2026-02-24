@@ -94,23 +94,24 @@ export const SellerAuthProvider = ({ children }) => {
     }, [sellerToken]);
 
     useEffect(() => {
-        const verifySellerSession = async () => {
+        const controller = new AbortController();
+        const verifySellerSession = async (signal) => {
             try {
                 if (sellerToken) {
-                    // Have an access token — try to get profile
-                    const response = await sellerApi.get("/profile");
+                    const response = await sellerApi.get("/profile", { signal });
                     setSeller(response.data);
-                } else {
-                    // No access token — try refreshing from cookie
-                    // Small optimization: only refresh if we might have a session
-                    const newToken = await refreshSellerToken();
-                    if (newToken) {
-                        const response = await sellerApi.get("/profile");
-                        setSeller(response.data);
-                    }
                 }
+                // When no sellerToken, skip refresh to avoid 401s for visitors who never logged in
             } catch (error) {
-                // Profile fetch failed даже after interceptor tried refresh
+                if (error.name === 'CanceledError' || error.name === 'AbortError') return;
+                if (error.response?.status === 404) {
+                    console.warn("Seller account no longer exists. Clearing session.");
+                    localStorage.removeItem("sellerToken");
+                    setSellerToken(null);
+                    setSeller(null);
+                    window.location.href = '/';
+                    return;
+                }
                 if (error.response?.status !== 401) {
                     console.error("Seller session verification failed:", error);
                 }
@@ -121,7 +122,8 @@ export const SellerAuthProvider = ({ children }) => {
                 setSellerLoading(false);
             }
         };
-        verifySellerSession();
+        verifySellerSession(controller.signal);
+        return () => controller.abort();
     }, []);
 
     return (

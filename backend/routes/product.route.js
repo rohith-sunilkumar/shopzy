@@ -2,22 +2,26 @@ import express from "express";
 import {
     createProduct,
     getAllProducts,
+    getProductById,
     getSellerProducts,
     updateProduct,
     deleteProduct
 } from "../controllers/product.controller.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifySeller } from "../middlewares/verifySeller.js";
 
 const router = express.Router();
 
-// Public route for all shoppers
+// Seller products (MUST be above /:id to prevent conflict)
+router.get("/seller", verifySeller, getSellerProducts);
+
+// Public routes for shoppers
 router.get("/", getAllProducts);
+router.get("/:id", getProductById);
 
-// All product routes for sellers are protected
-router.use(verifyToken);
 
+// Other protected seller routes
+router.use(verifySeller);
 router.post("/", createProduct);
-router.get("/seller", getSellerProducts);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 

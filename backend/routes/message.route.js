@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifySeller } from "../middlewares/verifySeller.js";
 import {
     getConversations,
     getMessages,
@@ -9,9 +9,9 @@ import {
 
 const router = express.Router();
 
-router.get("/", verifyToken, getConversations);
-router.post("/start", verifyToken, startConversation);
-router.get("/:conversationId", verifyToken, getMessages);
-router.post("/:conversationId", verifyToken, sendMessage);
+router.get("/", verifySeller, getConversations);
+router.post("/start", verifySeller, startConversation);
+router.get("/:conversationId", verifySeller, getMessages);
+router.post("/:conversationId", verifySeller, sendMessage);
 
 export default router;

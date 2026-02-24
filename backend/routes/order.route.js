@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifySeller } from "../middlewares/verifySeller.js";
 import {
     getOrders,
     getOrderById,
@@ -8,8 +8,8 @@ import {
 
 const router = express.Router();
 
-router.get("/", verifyToken, getOrders);
-router.get("/:orderId", verifyToken, getOrderById);
-router.patch("/:orderId/status", verifyToken, updateOrderStatus);
+router.get("/", verifySeller, getOrders);
+router.get("/:orderId", verifySeller, getOrderById);
+router.patch("/:orderId/status", verifySeller, updateOrderStatus);
 
 export default router;

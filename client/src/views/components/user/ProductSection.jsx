@@ -17,9 +17,9 @@ const ProductSection = ({
     // 1. Loading State
     if (loading) {
         return (
-            <section className={`${bgColor} py-20`}>
+            <section className={`${bgColor} py-8`}>
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 animate-pulse">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 animate-pulse">
                         <div>
                             <div className="w-32 h-4 bg-gray-200 rounded mb-4"></div>
                             <div className="w-64 h-10 bg-gray-200 rounded"></div>
@@ -39,8 +39,8 @@ const ProductSection = ({
     // 2. Error State
     if (error) {
         return (
-            <div className={`max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center min-h-[400px] flex flex-col items-center justify-center ${bgColor}`}>
-                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className={`max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center flex flex-col items-center justify-center ${bgColor}`}>
+                <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                     <PackageX className="w-10 h-10 text-red-500" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong.</h3>
@@ -56,11 +56,11 @@ const ProductSection = ({
 
     // 4. Success Grid State
     return (
-        <section className={`${bgColor} py-20 relative overflow-hidden group/section`}>
+        <section className={`${bgColor} py-8 relative overflow-hidden group/section`}>
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-gray-100 pb-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border-b border-gray-100 pb-4">
                     <div>
                         <div className="flex items-center gap-2 mb-3">
                             <Icon className="w-4 h-4 text-indigo-600" aria-hidden="true" />

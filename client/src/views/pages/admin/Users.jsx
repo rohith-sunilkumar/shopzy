@@ -10,14 +10,17 @@ const Users = () => {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
-        fetchUsers();
+        const controller = new AbortController();
+        fetchUsers(controller.signal);
+        return () => controller.abort();
     }, []);
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (signal) => {
         try {
-            const res = await adminApi.get('/users');
+            const res = await adminApi.get('/users', { signal });
             setUsers(res.data);
         } catch (error) {
+            if (error.name === 'CanceledError' || error.name === 'AbortError') return;
             toast.error("Failed to fetch users");
         } finally {
             setLoading(false);

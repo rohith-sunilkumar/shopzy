@@ -35,9 +35,7 @@ export const AuthProvider = ({ children }) => {
 
     const refreshAccessToken = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/auth/refresh", {
-                withCredentials: true,
-            });
+            const response = await api.get("/auth/refresh");
             const { accessToken } = response.data;
             login(accessToken);
             return accessToken;
@@ -58,7 +56,7 @@ export const AuthProvider = ({ children }) => {
             async (error) => {
                 const originalRequest = error.config;
 
-                if (error.response?.status === 401 && !originalRequest._retry) {
+                if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/refresh')) {
                     originalRequest._retry = true;
 
                     const newToken = await refreshAccessToken();
@@ -68,7 +66,7 @@ export const AuthProvider = ({ children }) => {
                     }
                 }
 
-                return Promise.reject(error); 0
+                return Promise.reject(error);
             }
         );
 
@@ -78,19 +76,23 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
+        const controller = new AbortController();
         const verifySession = async () => {
-            if (accessToken) {
-                try {
-                    // Make a simple request to verify current token
-                    await api.get("/auth/dashboard");
-                } catch (error) {
-                    // Interceptor will handle the refresh, if it fails, accessToken will be null
-                    console.error("Initial verification failed", error);
+            try {
+                if (accessToken) {
+                    await api.get("/auth/dashboard", { signal: controller.signal });
                 }
+                // When no accessToken, skip refresh to avoid 401s for visitors who never logged in
+            } catch (error) {
+                if (error.name === 'CanceledError' || error.name === 'AbortError') return;
+                if (error.response?.status === 401) return; // Expected when session invalid
+                if (accessToken) console.error("Session verification failed", error);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         verifySession();
+        return () => controller.abort();
     }, []);
 
     return (

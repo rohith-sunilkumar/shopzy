@@ -3,12 +3,14 @@ import { Theme } from "@radix-ui/themes";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Dashboard from "./views/pages/Dashboard";
 import Cart from "./views/pages/Cart";
+import Saved from "./views/pages/Saved";
 import { AuthProvider } from "./models/AuthContext";
 import { SellerAuthProvider } from "./models/SellerAuthContext";
 import ProtectedRoute from "./views/components/ProtectedRoute";
 import SellerProtectedRoute from "./views/components/seller/SellerProtectedRoute";
 import UserLayout from "./views/components/user/UserLayout";
 import SellerLayout from "./views/components/seller/SellerLayout";
+import ProductDetails from "./views/pages/user/ProductDetails";
 import Overview from "./views/pages/seller/Overview";
 import Products from "./views/pages/seller/Products";
 import Orders from "./views/pages/seller/Orders";
@@ -42,6 +44,8 @@ const AppContent = () => {
                   <Route path="/" element={<UserLayout />}>
                     <Route index element={<Dashboard />} />
                     <Route path="cart" element={<Cart />} />
+                    <Route path="saved" element={<Saved />} />
+                    <Route path="products/:id" element={<ProductDetails />} />
                     <Route path="dashboard" element={
                       <ProtectedRoute>
                         <Dashboard />

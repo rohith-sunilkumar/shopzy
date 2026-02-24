@@ -4,6 +4,7 @@ export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
+    console.warn("VerifyToken: No Bearer token provided");
     return res.status(401).json({ message: "no token" })
   }
 
@@ -16,6 +17,7 @@ export const verifyToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
+    console.error("VerifyToken Error:", error.message);
     return res.status(401).json({ message: "Token expired or invalid" });
   }
 }

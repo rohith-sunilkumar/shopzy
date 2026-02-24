@@ -13,7 +13,7 @@ const Dashboard = () => {
       <HeroCarousel />
 
       {/* Trust Features Bar */}
-      <div className="bg-white border-b border-gray-100 py-8 hidden md:block">
+      <div className="bg-gray-50 border-b border-gray-100 py-6 hidden md:block">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="flex items-center justify-center lg:justify-start gap-4">
@@ -59,7 +59,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="py-8 bg-gray-50/30">
+      <div className="py-2 bg-gray-50/30">
         {/* 1. New Arrivals Section */}
         <ProductSection
           title="New Arrivals"

@@ -88,7 +88,7 @@ export const dashboard = async (req, res) => {
   }
 };
 
-export const refresh = (req, res) => {
+export const refresh = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.sendStatus(401);
 
@@ -98,10 +98,15 @@ export const refresh = (req, res) => {
       process.env.JWT_REFRESH_SECRET
     );
 
-    if (decoded.role !== 'user') return res.sendStatus(403);
+    if (decoded.role && decoded.role !== 'user') return res.sendStatus(403);
+
+    const user = await User.findById(decoded.id);
+    if (!user || user.refreshToken !== token) {
+      res.clearCookie("refreshToken");
+      return res.sendStatus(401);
+    }
 
     const accessToken = generateAccessToken({ id: decoded.id, role: 'user' });
-
     res.json({ accessToken });
   } catch {
     return res.sendStatus(403);
